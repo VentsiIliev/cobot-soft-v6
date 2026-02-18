@@ -1,0 +1,278 @@
+"""
+Centralized Topic Definitions
+
+This module provides a single source of truth for all message broker topics
+used throughout the application. This prevents typos, makes refactoring easier,
+and provides better organization.
+
+Usage:
+    from modules.shared.v1.topics import SystemTopics, RobotTopics
+    
+    # Subscribe to system state updates
+    broker.subscribe(SystemTopics.APPLICATION_STATE, callback)
+    
+    # Publish robot service state
+    broker.publish(RobotTopics.SERVICE_STATE, state)
+"""
+
+from enum import Enum
+
+
+class TopicCategory:
+    """Base class for topic category definitions"""
+
+    @classmethod
+    def all_topics(cls) -> list[str]:
+        """Get all topic values for this category"""
+        return [getattr(cls, attr) for attr in dir(cls)
+                if not attr.startswith('_') and not callable(getattr(cls, attr))]
+
+
+class SystemTopics(TopicCategory):
+    """System-level topics for application state and coordination"""
+
+    # Application state management
+    SYSTEM_STATE = "system/state"
+    SYSTEM_MODE_CHANGE = "system/mode-change"
+    CURRENT_PROCESS = "system/current-process"
+    # Glue process state
+    OPERATION_STATE = "application/operation/state"
+    APPLICATION_STATE = "application/state"
+
+
+class RobotTopics(TopicCategory):
+    """Robot service and control topics"""
+
+    # Robot service state
+    SERVICE_STATE = "robot-service/state"
+
+    # Robot trajectory and movement
+    TRAJECTORY_START = "robot/trajectory/start"
+    TRAJECTORY_STOP = "robot/trajectory/stop"
+    TRAJECTORY_BREAK = "robot/trajectory/break"
+    TRAJECTORY_UPDATE_IMAGE = "robot/trajectory/updateImage"
+    TRAJECTORY_POINT = "robot/trajectory/point"
+
+    # Robot calibration -> feedback topics for the calibration process
+    # they do not start stop the calibration but provide feedback
+    ROBOT_CALIBRATION_LOG = "robot/calibration/log"
+    ROBOT_CALIBRATION_START = "robot/calibration/start"
+    ROBOT_CALIBRATION_STOP = "robot/calibration/stop"
+    ROBOT_CALIBRATION_IMAGE = "robot/calibration/image"
+    ROBOT_STATE = "robot/state"  # example message -> {"state": self.robotState,"position": self.position, "speed": self.velocity, "accel": self.acceleration}
+
+
+class VisionTopics(TopicCategory):
+    """Vision system and camera topics"""
+
+    # Vision service state
+    SERVICE_STATE = "vision-service/state"
+    LATEST_IMAGE = "vision-system/latest-image"
+    FPS = "vision-system/fps"
+    CALIBRATION_IMAGE_CAPTURED = "vision-system/calibration-image-captured"
+    # Camera and image processing
+    BRIGHTNESS_REGION = "vision-system/brightness-region"
+    THRESHOLD_REGION = "vision-system/threshold"
+    CALIBRATION_FEEDBACK = "vision-system/calibration-feedback"
+    THRESHOLD_IMAGE = "vision-system/threshold-image"
+    AUTO_BRIGHTNESS = "vision-system/auto-brightness"
+    AUTO_BRIGHTNESS_START = "vison-auto-brightness"
+    AUTO_BRIGHTNESS_STOP = "vison-auto-brightness"
+    TRANSFORM_TO_CAMERA_POINT = "vision-system/transform-to-camera-point"
+
+
+class PickAndPlaceTopics(TopicCategory):
+    """Pick and Place specific topics"""
+    # Pick and place process control
+    PICK_AND_PLACE_START = "pick-and-place/start"
+    PICK_AND_PLACE_STOP = "pick-and-place/stop"
+    PICK_AND_PLACE_LOG = "pick-and-place/log"
+    PICK_AND_PLACE_STATE = "pick-and-place/state"
+
+
+class GlueCellTopics(TopicCategory):
+    """Individual glue cell monitoring topics"""
+
+    # Weight data - standardized naming
+    CELL_1_WEIGHT = "glue/cell/1/weight"
+    CELL_2_WEIGHT = "glue/cell/2/weight"
+    CELL_3_WEIGHT = "glue/cell/3/weight"
+
+    # State information
+    CELL_1_STATE = "glue/cell/1/state"
+    CELL_2_STATE = "glue/cell/2/state"
+    CELL_3_STATE = "glue/cell/3/state"
+
+    # Configuration/metadata
+    CELL_1_GLUE_TYPE = "glue/cell/1/glue-type"
+    CELL_2_GLUE_TYPE = "glue/cell/2/glue-type"
+    CELL_3_GLUE_TYPE = "glue/cell/3/glue-type"
+
+    # Dynamic formatters (for code that iterates)
+    @staticmethod
+    def cell_weight(cell_id: int) -> str:
+        return f"glue/cell/{cell_id}/weight"
+
+    @staticmethod
+    def cell_state(cell_id: int) -> str:
+        return f"glue/cell/{cell_id}/state"
+
+    @staticmethod
+    def cell_glue_type(cell_id: int) -> str:
+        return f"glue/cell/{cell_id}/glue-type"
+
+
+class GlueMonitorServiceTopics(TopicCategory):
+    """Glue monitor service lifecycle topics"""
+
+    # Service state
+    SERVICE_STATE = "glue/monitor/service/state"
+    SERVICE_STARTED = "glue/monitor/service/started"
+    SERVICE_STOPPED = "glue/monitor/service/stopped"
+    SERVICE_ERROR = "glue/monitor/service/error"
+
+    # Aggregated data
+    ALL_CELLS_STATE = "glue/monitor/cells/state"
+    CONNECTION_STATUS = "glue/monitor/connection/status"
+
+    # Configuration
+    CONFIG_UPDATED = "glue/monitor/config/updated"
+
+
+class GlueProcessTopics(TopicCategory):
+    """Glue dispensing process topics"""
+
+    # Process lifecycle
+    PROCESS_STATE = "glue/process/state"
+    PROCESS_STARTED = "glue/process/started"
+    PROCESS_PAUSED = "glue/process/paused"
+    PROCESS_RESUMED = "glue/process/resumed"
+    PROCESS_STOPPED = "glue/process/stopped"
+    PROCESS_COMPLETED = "glue/process/completed"
+    PROCESS_ERROR = "glue/process/error"
+
+    # Progress tracking
+    PROCESS_PROGRESS = "glue/process/progress"
+    PATH_COMPLETED = "glue/process/path/completed"
+
+    # Logging
+    PROCESS_LOG = "glue/process/log"
+
+
+class GlueSprayServiceTopics(TopicCategory):
+    """Glue spray equipment control topics"""
+
+    # Generator control
+    GENERATOR_ON = "glue/spray/generator/on"
+    GENERATOR_OFF = "glue/spray/generator/off"
+    GENERATOR_STATE = "glue/spray/generator/state"
+
+    # Motor control
+    MOTOR_ON = "glue/spray/motor/on"
+    MOTOR_OFF = "glue/spray/motor/off"
+    MOTOR_STATE = "glue/spray/motor/state"
+
+    # Fan control
+    FAN_SPEED = "glue/spray/fan/speed"
+    FAN_STATE = "glue/spray/fan/state"
+
+
+class UITopics(TopicCategory):
+    """User interface specific topics"""
+    # Language and localization
+    LANGUAGE_CHANGED = "Language"
+
+
+# ========== Topic Registry ==========
+
+class TopicRegistry:
+    """Central registry for all application topics"""
+
+    # All topic categories
+    CATEGORIES = {
+        'system': SystemTopics,
+        'robot': RobotTopics,
+        'vision': VisionTopics,
+        'pick_and_place': PickAndPlaceTopics,
+        'glue_cell': GlueCellTopics,
+        'glue_monitor': GlueMonitorServiceTopics,
+        'glue_process': GlueProcessTopics,
+        'glue_spray': GlueSprayServiceTopics,
+        'ui': UITopics
+    }
+
+    @classmethod
+    def get_all_topics(cls) -> dict[str, list[str]]:
+        """Get all topics organized by category"""
+        return {category: topic_class.all_topics()
+                for category, topic_class in cls.CATEGORIES.items()}
+
+    @classmethod
+    def find_topic(cls, topic_name: str) -> tuple[str, str] | None:
+        """Find which category a topic belongs to"""
+        for category, topic_class in cls.CATEGORIES.items():
+            if topic_name in topic_class.all_topics():
+                return category, topic_class.__name__
+        return None
+
+    @classmethod
+    def validate_topic(cls, topic_name: str) -> bool:
+        """Validate if a topic is registered"""
+        return cls.find_topic(topic_name) is not None
+
+    @classmethod
+    def list_topics_by_pattern(cls, pattern: str) -> list[str]:
+        """Find topics matching a pattern"""
+        all_topics = []
+        for topic_class in cls.CATEGORIES.values():
+            all_topics.extend(topic_class.all_topics())
+
+        return [topic for topic in all_topics if pattern.lower() in topic.lower()]
+
+
+# ========== Utility Functions ==========
+
+def get_topic_info(topic_name: str) -> dict[str, str]:
+    """Get detailed information about a topic"""
+    result = TopicRegistry.find_topic(topic_name)
+    if result:
+        category, class_name = result
+        return {
+            "topic": topic_name,
+            "category": category,
+            "class": class_name,
+        }
+    else:
+        return {
+            "topic": topic_name,
+            "category": "unknown",
+            "class": "unknown",
+        }
+
+
+def print_all_topics():
+    """Print all registered topics organized by category"""
+    print("🔗 Registered Message Broker Topics")
+    print("=" * 50)
+
+    for category, topics in TopicRegistry.get_all_topics().items():
+        print(f"\n📁 {category.upper()} TOPICS:")
+        for topic in topics:
+            info = get_topic_info(topic)
+            print(f"  • {info['topic']}  (Class: {info['class']})")
+
+
+# ========== Example Usage ==========
+
+if __name__ == "__main__":
+    print_all_topics()
+
+    # Example validation
+    print(f"\nTopic validation:")
+    print(f"  ✅ Valid: {TopicRegistry.validate_topic(SystemTopics.SYSTEM_STATE)}")
+    print(f"  ❌ Invalid: {TopicRegistry.validate_topic('invalid/topic')}")
+
+    # Example search
+    print(f"\nTopics containing 'state':")
+    for topic in TopicRegistry.list_topics_by_pattern('state'):
+        print(f"  • {topic}")

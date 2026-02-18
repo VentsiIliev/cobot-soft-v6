@@ -1,0 +1,72 @@
+{
+    "workpieceId": "123",
+    "name": "312",
+    "description": "32",
+    "gripperId": "1",
+    "glueType": "TEST TYPE",
+    "contour": [
+        [
+            [
+                593.0,
+                349.0
+            ]
+        ],
+        [
+            [
+                630.0,
+                348.0
+            ]
+        ]
+    ],
+    "height": "3",
+    "glue_qty": "3",
+    "pickup_point": null,
+    "sprayPattern": {
+        "Contour": [
+            {
+                "contour": [
+                    [
+                        [
+                            593.0,
+                            349.0
+                        ]
+                    ],
+                    [
+                        [
+                            630.0,
+                            348.0
+                        ]
+                    ]
+                ],
+                "settings": {
+                    "Spray Width": "10",
+                    "Spraying Height": "0",
+                    "Fan Speed": "100",
+                    "Generator-Glue Delay": "1",
+                    "Pump Speed": "500",
+                    "Pump Reverse Time": "0.5",
+                    "Pump Speed Reverse": "3000",
+                    "RZ Angle": "0",
+                    "Glue Type": "TEST TYPE",
+                    "Generator Timeout": "5",
+                    "Time Before Motion": "0.1",
+                    "Time Before Stop": "1.0",
+                    "Reach Start Threshold": "1.0",
+                    "Reach End Threshold": "30.0",
+                    "Glue Speed Coefficient": "5",
+                    "Glue Acceleration Coefficient": "0",
+                    "Initial Ramp Speed Duration": "1.0",
+                    "Initial Ramp Speed": "5000",
+                    "Reverse Ramp Steps": "1",
+                    "Forward Ramp Steps": "3",
+                    "Adaptive Spacing (mm)": "10",
+                    "Spline Density Multiplier": "2.0",
+                    "Smoothing Lambda": "0.0",
+                    "Velocity": "60",
+                    "Acceleration": "30"
+                }
+            }
+        ],
+        "Fill": []
+    }
+}

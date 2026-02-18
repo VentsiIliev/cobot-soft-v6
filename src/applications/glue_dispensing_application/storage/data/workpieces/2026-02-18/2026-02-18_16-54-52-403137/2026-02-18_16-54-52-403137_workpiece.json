@@ -1,0 +1,15 @@
+{
+    "workpieceId": "k",
+    "name": "k",
+    "description": "i",
+    "gripperId": "1",
+    "glueType": "TEST TYPE",
+    "contour": [],
+    "height": "876",
+    "glue_qty": "8",
+    "pickup_point": null,
+    "sprayPattern": {
+        "Contour": [],
+        "Fill": []
+    }
+}
