@@ -231,7 +231,7 @@ class RobotCalibrationSettingKeys(str, Enum):
             tuple[str, int, str]: (area_type, corner_num, coordinate)
             
         Raises:
-            ValueError: If key is not a corner setting key
+            ValueError: If the key is not a corner setting key
         """
         if not key.value.startswith('work_area_'):
             raise ValueError(f"Key {key} is not a work area corner key")
