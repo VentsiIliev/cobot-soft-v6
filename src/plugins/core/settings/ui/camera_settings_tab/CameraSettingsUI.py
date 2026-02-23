@@ -735,3 +735,24 @@ class CameraSettingsUI(BaseSettingsTabLayout, QVBoxLayout):
                 toggle.update_pos_color(toggle.isChecked())
 
         print("Camera settings updated from CameraSettings object.")
+
+if __name__ == "__main__":
+    from PyQt6.QtWidgets import QApplication, QMainWindow
+    import sys
+
+    app = QApplication(sys.argv)
+
+    main_window = QMainWindow()
+    main_window.setWindowTitle("Camera Settings UI Test")
+    main_window.setMinimumSize(1280, 1024)
+
+    central_widget = QWidget()
+    main_window.setCentralWidget(central_widget)
+
+    camera_settings_ui = CameraSettingsUI(central_widget)
+    central_widget.setLayout(camera_settings_ui)
+
+    main_window.show()
+    camera_settings_ui.start_camera_updates()
+
+    sys.exit(app.exec())

@@ -1132,5 +1132,6 @@ if __name__ == "__main__":
     layout = CalibrationServiceTabLayout(main_widget)
     main_widget.setLayout(layout)
     main_widget.show()
+    main_widget.setMinimumSize(1280, 1024)
     sys.exit(app.exec())
 

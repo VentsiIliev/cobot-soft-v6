@@ -31,7 +31,7 @@ class UserTableModel:
         self.headers = ["ID", "First Name", "Last Name", "Password", "Role", "Email"]
 
     def get_user_data(self, user):
-        """Convert user object to list for table display"""
+        """Convert user object to a list for table display"""
         try:
 
             role_display = "Unknown"
